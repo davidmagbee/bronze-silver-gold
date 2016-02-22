@@ -25,7 +25,7 @@ Whenever you have a moment of "Ooh, I should add this" add it to your **gold** l
 
 While creating the Tic Tac Toe examples for this last night, I &mdash; being totally confident in my abilities &mdash; didn't actually bother to write down my ideas for bronze, silver, and gold versions.
 
-I stayed up until about 2am writing the "gold" version. It hardly looks any different from the "silver" version, and the code is much, much more complicated and convoluted than is necessary.
+I stayed up until about 2am writing the "gold" version. It hardly looked any different from the "silver" version, and the code was much, much more complicated and convoluted than was necessary.
 
 This morning, another instructor pointed out the huge leap from silver to gold. So I want back, actually planned out a gold version, renamed the old and poorly-executed gold version to the included "platinum" example, and in only about 40 minutes arrived at the current much-better gold version.
 
