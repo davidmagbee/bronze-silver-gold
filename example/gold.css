@@ -2,6 +2,8 @@ body{
   background-color:#eee;
   text-align:center;
   font-family:"Helvetica Neue", Helvetica, sans-serif;
+  font-size:36px;
+  line-height:50px;
 }
 h1{
   color:#aaa;
@@ -9,9 +11,6 @@ h1{
   text-shadow:-1px 1px 0 #666;
 }
 p{
-  color:#000;
-  font-size:36px;
-  line-height:50px;
   height:50px;
   width:300px;
   border-radius:5px;
@@ -29,30 +28,34 @@ table{
   border-spacing:0;
   border-radius:5px;
   overflow:hidden;
-  background-color:#fff;
 }
 td{
   width:100px;
   height:100px;
   padding:0;
   background-color:#fff;
+  color:#fff;
 }
-[data-player]{
-  opacity:0.2;
-  transition:background-color 0.3s;
-}
-td:not([data-player]){
+td:not(.played){
   cursor:pointer;
 }
-td:not([data-player]):hover{
-  outline:1px solid #eee;
+td:not(.played):hover{
+  background-color:#ddd;
 }
-[data-player="1"]{
-  background-color:#00f;
+.player1, .player2{
+  color:#777;
+  background-color:#fff;
 }
-[data-player="2"]{
-  background-color:#f00;
+.player1:after{
+  content:"X";
+}
+.player2:after{
+  content:"O";
 }
 .won{
-  opacity:1;
+  color:#fff;
+  background-color:#00f;
+}
+#info, td{
+  transition:color 0.3s, background-color 0.3s;
 }

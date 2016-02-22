@@ -16,7 +16,7 @@ For a Tic Tac Toe game, the breakdown might look like this:
 - **Silver**: Enough CSS to make it actually look like a game, and enough Javascript for a "reset" button.
   - [Silver example](http://ga-wdi-lessons.github.io/bronze-silver-gold/example/silver.html)
 
-- **Gold**: CSS transitions or animations, and cleanly-written Javascript that tells you when the game is over and who won.
+- **Gold**: CSS transitions or animations, showing "X" and "O" instead of colors, and Javascript that tells you when the game is over and who won.
   - [Gold example](http://ga-wdi-lessons.github.io/bronze-silver-gold/example/gold.html)
 
 Whenever you have a moment of "Ooh, I should add this" add it to your **gold** list. If that idea didn't occur to you at the start, it's probably not necessary for your MVP.

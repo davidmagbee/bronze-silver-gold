@@ -1,138 +1,71 @@
-"use strict";
+var cells = document.querySelectorAll("td");
+var info = document.getElementById("info");
+var hasWinner = false;
+var currentPlayer;
 
-(function(){
-  window.onload = function(){
-    var board = new Board();
-  }
-  function Game(totalCells){
-    var game = this;
-    game.dimensions = Math.sqrt(totalCells);
-    if(game.dimensions % 1 !== 0) throw new Error("The board's not Cell.");
-    game.currentPlayer = null;
-    game.changePlayer();
-  }
-  Game.prototype.changePlayer = function(){
-    var game = this;
-    if(game.currentPlayer === 1) game.currentPlayer = 2;
-    else game.currentPlayer = 1;
-  }
-  Game.prototype.detectWinner = function(positions){
-    var game = this;
-    var total = positions.length;
-    var sequences = [];
-    game.winningCells = [];
-    checkHorizontally();
-    checkVertically();
-    checkNWSE();
-    checkNESW();
-    sequences.forEach(function(sequence){
-      if(sequence.length === game.dimensions) game.winningCells.push(sequence);
-    });
+document.getElementById("reset").addEventListener("click", reset);
+reset();
 
-    function checkVertically(){
-      var x, y, base, matches;
-      for(x = 0; x < game.dimensions; x++){
-        base = positions[x];
-        matches = [x];
-        for(y = x + game.dimensions; y < total; y += game.dimensions){
-          if(base && positions[y] === base) matches.push(y);
-        }
-        sequences.push(matches);
+for(var i = 0; i < cells.length; i++){
+  cells[i].addEventListener("click", function(){
+    var cell = this;
+    if(cell.className === "" && !hasWinner){
+      cell.classList.add("played");
+      cell.classList.add(currentPlayer);
+      if(!detectWinner()){
+        changePlayer();
       }
     }
-    function checkHorizontally(){
-      var x, y, base, matches;
-      for(y = 0; y < total; y += game.dimensions){
-        base = positions[y];
-        matches = [y];
-        for(x = y + 1; x < y + game.dimensions; x++){
-          if(base && positions[x] === base) matches.push(x);
-        }
-        sequences.push(matches);
-      }
-    }
-    function checkNWSE(){
-      var x = 0;
-      var base = positions[x];
-      var matches = [];
-      for(x; x < total; x += (game.dimensions + 1)){
-        if(base && positions[x] === base) matches.push(x);
-      }
-      sequences.push(matches);
-    }
-    function checkNESW(){
-      var x = game.dimensions - 1;
-      var base = positions[x];
-      var matches = [];
-      for(x; x < total - game.dimensions + 1; x += (game.dimensions - 1)){
-        if(base && positions[x] === base) matches.push(x);
-      }
-      sequences.push(matches);
-    }
-  }
+  });
+}
 
-  function Board(){
-    var board = this;
-    board.game = null;
-    board.info = document.getElementById("info");
-    board.cells = document.querySelectorAll("td");
-    board.locked = false;
-    board.forEachCell(function(cell){
-      cell.addEventListener("click", cellAction);
-    });
-    document.getElementById("reset").addEventListener("click", function(){
-      board.reset();
-    });
-    board.reset();
+function changePlayer(){
+  if(currentPlayer === "player1"){
+    currentPlayer = "player2";
+  }else{
+    currentPlayer = "player1";
+  }
+  info.className = currentPlayer;
+}
 
-    function cellAction(){
-      var cell = this;
-      if(!board.locked && !cell.hasAttribute("data-player")){
-        cell.setAttribute("data-player", board.game.currentPlayer);
-        board.newTurn();
+function reset(){
+  hasWinner = false;
+  for(var i = 0; i < cells.length; i++){
+    cells[i].className = "";
+  }
+  changePlayer();
+}
+
+function detectWinner(){
+  var winningCombos = [
+    [0,1,2],
+    [3,4,5],
+    [6,7,8],
+    [0,3,6],
+    [1,4,7],
+    [2,5,8],
+    [0,4,8],
+    [2,4,6]
+  ]
+  for(var i = 0; i < winningCombos.length; i++){
+    var combo = winningCombos[i];
+    var player1Count = 0;
+    var player2Count = 0;
+    for(var c = 0; c < combo.length; c++){
+      var cell = cells[combo[c]];
+      if(cell.classList.contains("player1")){
+        player1Count++;
+      }else if(cell.classList.contains("player2")){
+        player2Count++;
       }
     }
-  }
-  Board.prototype.forEachCell = function(callback){
-    var board = this;
-    var i, l = board.cells.length;
-    for(i = 0; i < l; i++){
-      callback(board.cells[i]);
+    if(player1Count === 3 || player2Count === 3){
+      hasWinner = true;
+      info.classList.add("won");
+      for(var c = 0; c < combo.length; c++){
+        cells[combo[c]].classList.add("won");
+      }
+      return true;
     }
   }
-  Board.prototype.newTurn = function(){
-    var board = this;
-    var positions = [];
-    board.forEachCell(function(cell){
-      positions.push(cell.getAttribute("data-player"));
-    });
-    board.game.detectWinner(positions);
-    if(board.game.winningCells.length > 0){
-      board.locked = true;
-      board.info.classList.add("won");
-      board.highlightCells(board.game.winningCells);
-    }else{
-      board.game.changePlayer();
-      board.info.setAttribute("data-player", board.game.currentPlayer);
-    }
-  }
-  Board.prototype.highlightCells = function(cells){
-    var board = this;
-    cells.forEach(function(sequence){
-      sequence.forEach(function(cellNum){
-        board.cells[cellNum].classList.add("won");
-      });
-    });
-  }
-  Board.prototype.reset = function(){
-    var board = this;
-    board.locked = false;
-    board.info.classList.remove("won");
-    board.forEachCell(function(cell){
-      cell.removeAttribute("data-player");
-      cell.classList.remove("won");
-    });
-    board.game = new Game(board.cells.length);
-    board.newTurn();
-  }
-})();
+}
